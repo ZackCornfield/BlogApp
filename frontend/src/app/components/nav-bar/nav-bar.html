@@ -1,0 +1,14 @@
+<nav class="bg-gray-800 text-white p-4 flex justify-between items-center">
+  <span class="text-xl font-semibold">MyApp</span>
+  <div>
+    @if (!authenticated) {
+    <a class="mr-4" routerLink="/login">Login</a>
+    <a class="mr-4" routerLink="/register">Register</a>
+    } @else {
+    <a class="mr-4" routerLink="/dashboard">Dashboard</a>
+    <button (click)="logout()" class="bg-red-500 px-3 py-1 rounded">
+      Logout
+    </button>
+    }
+  </div>
+</nav>

@@ -1,0 +1,40 @@
+<div class="max-w-2xl mx-auto mt-6">
+  <h2 class="text-2xl font-bold mb-4">My Posts</h2>
+  <div class="p-4 mb-3 border rounded">
+    @for (post of posts; track post.id;) {
+    <h3 class="text-xl font-semibold">{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+    <button class="text-blue-600 mr-2" (click)="editPost(post)">Edit</button>
+    <button class="text-red-600" (click)="deletePost(post.id!)">Delete</button>
+    }
+  </div>
+
+  <div class="mt-8 p-4 border rounded">
+    <h3 class="text-lg font-bold mb-2">Add New Post</h3>
+    <form #postForm="ngForm" (submit)="addPost(postForm)">
+      <input
+        [(ngModel)]="newPost.title"
+        name="title"
+        placeholder="title"
+        required
+        type="text"
+        class="block w-full mb-2 p-2 border"
+      />
+      <textarea
+        [(ngModel)]="newPost.content"
+        name="content"
+        placeholder="content"
+        rows="3"
+        required
+        class="block w-full mb-2 p-2 border"
+      ></textarea>
+      <button
+        type="submit"
+        [disabled]="postForm.invalid"
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Create Post
+      </button>
+    </form>
+  </div>
+</div>
