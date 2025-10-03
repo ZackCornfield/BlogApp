@@ -1,5 +1,7 @@
-<div class="max-w-sm mx-auto mt-10 p-6 border-gray-300 rounded">
-  <h2 class="text-2xl font-bold mb-4">Login</h2>
+<div
+  class="max-w-sm mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-lg bg-white"
+>
+  <h2 class="text-3xl font-extrabold mb-6 text-center text-gray-800">Login</h2>
   <form (submit)="onSubmit(loginForm)" #loginForm="ngForm">
     <input
       [(ngModel)]="username"
@@ -7,20 +9,20 @@
       name="username"
       placeholder="Username"
       required
-      class="block w-full mb-3 p-2 border"
+      class="block w-full mb-4 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
     <input
       [(ngModel)]="password"
-      type="text"
+      type="password"
       name="password"
       placeholder="Password"
       required
-      class="block w-full mb-3 p-2 border"
+      class="block w-full mb-4 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
     <button
       type="submit"
       [disabled]="loginForm.invalid"
-      class="bg-blue-600 text-white px-4 py-2 rounded w-full"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded w-full transition duration-300"
     >
       Login
     </button>
