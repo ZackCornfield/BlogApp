@@ -10,12 +10,14 @@ import { Post, PostService } from '../../services/post';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  isLoading: boolean = true;
   posts: Post[] = [];
   newPost: Partial<Post> = { title: '', content: '' };
 
   constructor(private postService: PostService) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.loadPosts();
   }
 
@@ -23,6 +25,7 @@ export class Dashboard implements OnInit {
     this.postService.getPosts().subscribe({
       next: (data) => {
         this.posts = data;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading posts: ', err);

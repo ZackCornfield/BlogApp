@@ -28,7 +28,7 @@ export class AuthService {
 
   logout() {
     this.token = null;
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
@@ -41,11 +41,11 @@ export class AuthService {
 
   saveToken(token: string) {
     this.token = token;
-    localStorage.setItem('jwt', token);
+    localStorage.setItem('token', token);
   }
 
   loadToken() {
-    const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('token');
     if (token) this.token = token;
     return this.token;
   }

@@ -4,35 +4,43 @@
   <span class="text-xl font-semibold tracking-wide">MyApp</span>
   <div class="flex items-center space-x-4">
     <!-- Show login/register links if not authenticated -->
-    <ng-container *ngIf="!authenticated; else loggedIn">
-      <a
-        class="hover:text-gray-300 transition duration-200"
-        routerLink="/login"
-        routerLinkActive="active"
-        >Login</a
-      >
-      <a
-        class="hover:text-gray-300 transition duration-200"
-        routerLink="/register"
-        routerLinkActive="active"
-        >Register</a
-      >
-    </ng-container>
-
-    <!-- Show dashboard/logout links if authenticated -->
-    <ng-template #loggedIn>
-      <a
-        class="hover:text-gray-300 transition duration-200"
-        routerLink="/dashboard"
-        routerLinkActive="active"
-        >Dashboard</a
-      >
-      <button
-        (click)="logout()"
-        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition duration-200"
-      >
-        Logout
-      </button>
-    </ng-template>
+    @if (!authenticated) {
+    <a
+      class="hover:text-gray-300 transition duration-200"
+      routerLink="/login"
+      routerLinkActive="active"
+      >Login</a
+    >
+    <a
+      class="hover:text-gray-300 transition duration-200"
+      routerLink="/register"
+      routerLinkActive="active"
+      >Register</a
+    >
+    } @else {
+    <!-- Show dashboard/profile/logout links if authenticated -->
+    <a
+      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
+      routerLink="/dashboard"
+      routerLinkActive="active"
+    >
+      <img src="/dashboard-icon.svg" alt="Dashboard" class="w-6 h-6" />
+      <span>Dashboard</span>
+    </a>
+    <a
+      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
+      routerLink="/profile"
+      routerLinkActive="active"
+    >
+      <img src="/profile-icon.png" alt="Profile" class="w-6 h-6 rounded-full" />
+      <span>Profile</span>
+    </a>
+    <button
+      (click)="logout()"
+      class="bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-full transition duration-200"
+    >
+      Logout
+    </button>
+    }
   </div>
 </nav>
