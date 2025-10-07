@@ -1,0 +1,31 @@
+<div class="post p-4 border border-gray-300 rounded-lg bg-white shadow-md">
+  <h3 class="text-2xl font-semibold text-gray-700 mb-2">{{ post()?.title }}</h3>
+  <p class="text-gray-600 mb-4">{{ post()?.content }}</p>
+  <p class="text-sm text-gray-500 mb-4">
+    Posted on: {{ post()?.createdAt | date }}
+  </p>
+  <div class="flex items-center space-x-4">
+    <button
+      class="hover:scale-110 transition-transform"
+      [ngClass]="post()?.liked ? 'text-red-600' : 'text-gray-400'"
+      (click)="post()?.liked ? onUnlike() : onLike()"
+    >
+      {{ post()?.liked ? "❤️" : "🤍" }}
+    </button>
+    @if (isEditable()) {
+    <button
+      class="text-green-600 hover:underline font-medium tracking-wide"
+      (click)="onEdit()"
+    >
+      Edit
+    </button>
+    } @if (isEditable()) {
+    <button
+      class="text-red-600 hover:underline font-medium tracking-wide"
+      (click)="onDelete()"
+    >
+      Delete
+    </button>
+    }
+  </div>
+</div>

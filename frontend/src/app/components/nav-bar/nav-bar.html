@@ -1,18 +1,18 @@
 <nav
   class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md"
 >
-  <span class="text-xl font-semibold tracking-wide">MyApp</span>
+  <span class="text-xl font-semibold tracking-wide">Blog App</span>
   <div class="flex items-center space-x-4">
     <!-- Show login/register links if not authenticated -->
     @if (!authenticated) {
     <a
-      class="hover:text-gray-300 transition duration-200"
+      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
       routerLink="/login"
       routerLinkActive="active"
       >Login</a
     >
     <a
-      class="hover:text-gray-300 transition duration-200"
+      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
       routerLink="/register"
       routerLinkActive="active"
       >Register</a

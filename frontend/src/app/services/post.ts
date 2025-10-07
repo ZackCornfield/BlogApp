@@ -6,6 +6,16 @@ export interface Post {
   content: string;
   createdAt?: Date;
   id?: number;
+  likes?: number;
+  authorId?: number;
+  liked?: boolean; // Added liked property to track if the post is liked by the user
+}
+
+export interface PostResponse {
+  posts: Post[];
+  totalPosts: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 @Injectable({
@@ -16,8 +26,11 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts() {
-    return this.http.get<Post[]>(`${this.apiUrl}`, {});
+  getPosts(page: number, limit: number) {
+    return this.http.get<PostResponse>(
+      `${this.apiUrl}?page=${page}&limit=${limit}`,
+      {}
+    );
   }
 
   addPost(post: Partial<Post>) {
@@ -30,5 +43,13 @@ export class PostService {
 
   deletePost(id: any) {
     return this.http.delete(`${this.apiUrl}/${id}`, {});
+  }
+
+  likePost(postId: number) {
+    return this.http.post(`${this.apiUrl}/${postId}/like`, {});
+  }
+
+  unlikePost(postId: number) {
+    return this.http.post(`${this.apiUrl}/${postId}/unlike`, {});
   }
 }

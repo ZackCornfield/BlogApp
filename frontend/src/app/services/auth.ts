@@ -53,8 +53,8 @@ export class AuthService {
   }
 
   clearTokenOnClose() {
-    window.addEventListener('unload', () => {
-      this.logout();
-    });
+    // window.addEventListener('unload', () => {
+    //   this.logout();
+    // });
   }
 }
