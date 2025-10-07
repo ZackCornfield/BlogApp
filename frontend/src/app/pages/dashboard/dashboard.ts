@@ -13,6 +13,9 @@ export class Dashboard implements OnInit {
   isLoading: boolean = true;
   posts: Post[] = [];
   newPost: Partial<Post> = { title: '', content: '' };
+  isAddPostModalOpen: boolean = false;
+  isEditPostModalOpen: boolean = false;
+  editingPost: Partial<Post> = {};
 
   constructor(private postService: PostService) {}
 
@@ -47,22 +50,6 @@ export class Dashboard implements OnInit {
     }
   }
 
-  editPost(post: Post) {
-    const updatedContent = prompt('Edit Content:', post.content);
-    if (updatedContent !== null) {
-      this.postService
-        .updatePost(post.id, { content: updatedContent })
-        .subscribe({
-          next: () => {
-            post.content = updatedContent;
-          },
-          error: (err) => {
-            console.error('Error updating post: ', err);
-          },
-        });
-    }
-  }
-
   deletePost(postId: number) {
     if (confirm('Are you sure you want to delete this post')) {
       this.postService.deletePost(postId).subscribe({
@@ -71,6 +58,46 @@ export class Dashboard implements OnInit {
         },
         error: (err) => {
           console.error('Error deleting post: ', err);
+        },
+      });
+    }
+  }
+
+  openAddPostModal() {
+    this.isAddPostModalOpen = true;
+  }
+
+  closeAddPostModal() {
+    this.isAddPostModalOpen = false;
+  }
+
+  openEditPostModal(post: Post) {
+    this.editingPost = { ...post };
+    this.isEditPostModalOpen = true;
+  }
+
+  closeEditPostModal() {
+    this.isEditPostModalOpen = false;
+  }
+
+  updatePost(form: NgForm) {
+    if (form.valid && this.editingPost.id) {
+      const updateData = { content: this.editingPost.content || '' };
+      this.postService.updatePost(this.editingPost.id, updateData).subscribe({
+        next: () => {
+          const index = this.posts.findIndex(
+            (p) => p.id === this.editingPost.id
+          );
+          if (index !== -1) {
+            this.posts[index] = {
+              ...this.editingPost,
+              content: updateData.content,
+            } as Post;
+          }
+          this.closeEditPostModal();
+        },
+        error: (err) => {
+          console.error('Error updating post: ', err);
         },
       });
     }

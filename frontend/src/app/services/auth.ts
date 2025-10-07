@@ -13,7 +13,9 @@ export class AuthService {
   apiUrl = 'http://localhost:3000/api';
   token: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.clearTokenOnClose();
+  }
 
   register(username: string, password: string) {
     return this.http.post(`${this.apiUrl}/auth/register`, {
@@ -48,5 +50,11 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) this.token = token;
     return this.token;
+  }
+
+  clearTokenOnClose() {
+    window.addEventListener('unload', () => {
+      this.logout();
+    });
   }
 }
