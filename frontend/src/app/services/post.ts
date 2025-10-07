@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 export interface Post {
   title: string;
   content: string;
+  createdAt?: Date;
   id?: number;
 }
 
