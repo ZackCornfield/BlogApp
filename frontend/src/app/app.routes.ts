@@ -5,6 +5,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Profile } from './pages/profile/profile';
 import { AuthGuard } from './guards/auth.guard';
 import { PostDetails } from './pages/post-details/post-details';
+import { GlobalFeed } from './pages/global-feed/global-feed';
 
 export const routes: Routes = [
   {
@@ -21,11 +22,20 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'global-feed',
+    component: GlobalFeed,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'profile',
     component: Profile,
     canActivate: [AuthGuard],
   },
-  { path: 'post/:id', component: PostDetails },
+  {
+    path: 'post/:id',
+    component: PostDetails,
+    canActivate: [AuthGuard],
+  },
   {
     path: '',
     redirectTo: 'dashboard',

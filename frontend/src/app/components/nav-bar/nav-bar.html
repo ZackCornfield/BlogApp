@@ -18,14 +18,22 @@
       >Register</a
     >
     } @else {
-    <!-- Show dashboard/profile/logout links if authenticated -->
+    <!-- Show feed/dashboard/profile/logout links if authenticated -->
+    <a
+      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
+      routerLink="/global-feed"
+      routerLinkActive="active"
+    >
+      <img src="/feed-icon.svg" alt="Feed" class="w-5 h-5" />
+      <span>Feed</span>
+    </a>
     <a
       class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
       routerLink="/dashboard"
       routerLinkActive="active"
     >
       <img src="/dashboard-icon.svg" alt="Dashboard" class="w-6 h-6" />
-      <span>Dashboard</span>
+      <span>Posts</span>
     </a>
     <a
       class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"

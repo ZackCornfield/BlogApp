@@ -10,6 +10,7 @@ export interface Post {
   commentsCount?: number;
   authorId?: number;
   liked?: boolean; // Added liked property to track if the post is liked by the user
+  author?: { id: number; username: string }; // Added author property to hold author's info
 }
 
 export interface PostResponse {
@@ -41,9 +42,16 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(page: number, limit: number) {
+  getUserPosts(page: number, limit: number) {
     return this.http.get<PostResponse>(
-      `${this.apiUrl}?page=${page}&limit=${limit}`,
+      `${this.apiUrl}/user?page=${page}&limit=${limit}`,
+      {}
+    );
+  }
+
+  getAllPosts(page: number, limit: number) {
+    return this.http.get<PostResponse>(
+      `${this.apiUrl}/all?page=${page}&limit=${limit}`,
       {}
     );
   }

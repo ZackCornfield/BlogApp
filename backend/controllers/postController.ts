@@ -2,27 +2,31 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const getPosts = async (req: any, res: any) => {
+export const getAllPosts = async (req: any, res: any) => {
   try {
-    const userId = req.user.id; // Get the current user's ID
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    // Fetch posts with pagination
     const posts = await prisma.post.findMany({
       skip: skip,
       take: limit,
       orderBy: { createdAt: "desc" },
+      include: {
+        author: { select: { id: true, username: true } }, // Include author details
+      },
+      where: {
+        // Doesn't include current user's posts
+        authorId: { not: req.user.id },
+      },
     });
 
-    // Check if the current user has liked each post and include the likes count, also include comments count
-    const postsWithLikes = await Promise.all(
+    const postsWithLikesAndCounts = await Promise.all(
       posts.map(async (post) => {
         const liked = await prisma.like.findFirst({
           where: {
             postId: post.id,
-            userId: userId,
+            userId: req.user.id, // Get the current user's ID from the request
           },
         });
         const likesCount = await prisma.like.count({
@@ -37,17 +41,67 @@ export const getPosts = async (req: any, res: any) => {
         });
         return {
           ...post,
-          liked: !!liked,
           likes: likesCount,
           commentsCount: commentsCount,
-        }; // Add the `liked`, `likes`, and `commentsCount` properties
+          liked: !!liked,
+        }; // Add the `likes` and `commentsCount` properties
       })
     );
 
     const totalPosts = await prisma.post.count();
 
     res.status(200).json({
-      posts: postsWithLikes,
+      posts: postsWithLikesAndCounts,
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    console.error("Error fetching all posts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getUserPosts = async (req: any, res: any) => {
+  try {
+    const userId = req.user.id; // Get the current user's ID
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Fetch posts with pagination
+    const posts = await prisma.post.findMany({
+      skip: skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      where: { authorId: userId },
+    });
+
+    // Get the likes and comments count
+    const postsWithLikesAndCounts = await Promise.all(
+      posts.map(async (post) => {
+        const likesCount = await prisma.like.count({
+          where: {
+            postId: post.id,
+          },
+        });
+        const commentsCount = await prisma.comment.count({
+          where: {
+            postId: post.id,
+          },
+        });
+        return {
+          ...post,
+          likes: likesCount,
+          commentsCount: commentsCount,
+        }; // Add the `likes` and `commentsCount` properties
+      })
+    );
+
+    const totalPosts = await prisma.post.count();
+
+    res.status(200).json({
+      posts: postsWithLikesAndCounts,
       totalPosts,
       totalPages: Math.ceil(totalPosts / limit),
       currentPage: page,
@@ -69,6 +123,9 @@ export const getPost = async (req: any, res: any) => {
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
+      include: {
+        author: { select: { id: true, username: true } }, // Include author details
+      },
     });
 
     if (!post) {
@@ -92,14 +149,15 @@ export const getPost = async (req: any, res: any) => {
         postId: post.id,
       },
     });
-    const postWithLikes = {
+
+    const postWithDetails = {
       ...post,
       liked: !!liked,
       likes: likesCount,
       commentsCount: commentsCount,
     }; // Add the `liked`, `likes`, and `commentsCount` properties
 
-    res.status(200).json(postWithLikes);
+    res.status(200).json(postWithDetails);
   } catch (error) {
     console.error("Error fetching post:", error);
     res.status(500).json({ message: "Internal Server Error" });

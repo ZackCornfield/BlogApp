@@ -25,15 +25,19 @@ export class PostComponent {
 
   onLike() {
     const post = this.post();
-    if (post) {
-      this.like.emit(post.id!);
+    console.log('onLike called in post.component, post:', post);
+    if (post && post.id) {
+      console.log('Emitting like event with postId:', post.id);
+      this.like.emit(post.id);
     }
   }
 
   onUnlike() {
     const post = this.post();
-    if (post) {
-      this.unlike.emit(post.id!);
+    console.log('onUnlike called in post.component, post:', post);
+    if (post && post.id) {
+      console.log('Emitting unlike event with postId:', post.id);
+      this.unlike.emit(post.id);
     }
   }
 
