@@ -10,7 +10,7 @@
     } @else { @for (post of posts; track post.id;) {
     <app-post
       [post]="post"
-      [isEditable]="true"
+      [isEditable]="false"
       (edit)="openEditPostModal($event)"
       (delete)="deletePost($event)"
       (like)="likePost($event)"

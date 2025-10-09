@@ -4,6 +4,7 @@ import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Profile } from './pages/profile/profile';
 import { AuthGuard } from './guards/auth.guard';
+import { PostDetails } from './pages/post-details/post-details';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
     component: Profile,
     canActivate: [AuthGuard],
   },
+  { path: 'post/:id', component: PostDetails },
   {
     path: '',
     redirectTo: 'dashboard',

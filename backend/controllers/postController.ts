@@ -16,7 +16,7 @@ export const getPosts = async (req: any, res: any) => {
       orderBy: { createdAt: "desc" },
     });
 
-    // Check if the current user has liked each post and include the likes count
+    // Check if the current user has liked each post and include the likes count, also include comments count
     const postsWithLikes = await Promise.all(
       posts.map(async (post) => {
         const liked = await prisma.like.findFirst({
@@ -30,7 +30,17 @@ export const getPosts = async (req: any, res: any) => {
             postId: post.id,
           },
         });
-        return { ...post, liked: !!liked, likes: likesCount }; // Add the `liked` and `likes` properties
+        const commentsCount = await prisma.comment.count({
+          where: {
+            postId: post.id,
+          },
+        });
+        return {
+          ...post,
+          liked: !!liked,
+          likes: likesCount,
+          commentsCount: commentsCount,
+        }; // Add the `liked`, `likes`, and `commentsCount` properties
       })
     );
 
@@ -44,6 +54,54 @@ export const getPosts = async (req: any, res: any) => {
     });
   } catch (error) {
     console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getPost = async (req: any, res: any) => {
+  try {
+    const postId = Number(req.params.id);
+    const userId = req.user.id; // Get the current user's ID
+
+    if (isNaN(postId)) {
+      return res.status(400).json({ message: "Invalid post ID" });
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Check if the current user has liked the post and include the likes count
+    const liked = await prisma.like.findFirst({
+      where: {
+        postId: post.id,
+        userId: userId,
+      },
+    });
+    const likesCount = await prisma.like.count({
+      where: {
+        postId: post.id,
+      },
+    });
+    const commentsCount = await prisma.comment.count({
+      where: {
+        postId: post.id,
+      },
+    });
+    const postWithLikes = {
+      ...post,
+      liked: !!liked,
+      likes: likesCount,
+      commentsCount: commentsCount,
+    }; // Add the `liked`, `likes`, and `commentsCount` properties
+
+    res.status(200).json(postWithLikes);
+  } catch (error) {
+    console.error("Error fetching post:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -286,33 +344,33 @@ export const deleteComment = async (req: any, res: any) => {
   }
 };
 
-// export const getComments = async (req: any, res: any) => {
-//   try {
-//     const postId = parseInt(req.params.id);
-//     const page = parseInt(req.query.page) || 1; // Default to page 1
-//     const limit = parseInt(req.query.limit) || 10; // Default to 10 comments per page
-//     const skip = (page - 1) * limit;
+export const getComments = async (req: any, res: any) => {
+  try {
+    const postId = parseInt(req.params.id);
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 comments per page
+    const skip = (page - 1) * limit;
 
-//     const comments = await prisma.comment.findMany({
-//       where: { postId: postId },
-//       include: { user: { select: { id: true, username: true } } },
-//       skip: skip,
-//       take: limit,
-//       orderBy: { createdAt: "desc" }, // Optional: Order by newest first
-//     });
+    const comments = await prisma.comment.findMany({
+      where: { postId: postId },
+      include: { user: { select: { id: true, username: true } } },
+      skip: skip,
+      take: limit,
+      orderBy: { createdAt: "desc" }, // Optional: Order by newest first
+    });
 
-//     const totalComments = await prisma.comment.count({
-//       where: { postId: postId },
-//     });
+    const totalComments = await prisma.comment.count({
+      where: { postId: postId },
+    });
 
-//     res.status(200).json({
-//       comments,
-//       totalComments,
-//       totalPages: Math.ceil(totalComments / limit),
-//       currentPage: page,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching comments:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
+    res.status(200).json({
+      comments,
+      totalComments,
+      totalPages: Math.ceil(totalComments / limit),
+      currentPage: page,
+    });
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
