@@ -39,7 +39,7 @@ model Post {
 
 model Like {
   id        Int      @id @default(autoincrement())
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
@@ -47,11 +47,11 @@ model Like {
 }
 
 model Comment {
-  id Int @id @default(autoincrement())
-  content String 
-  post Post @relation(fields: [postId], references: [id])
-  postId Int
-  user User @relation(fields: [userId], references: [id])
-  userId Int
+  id        Int      @id @default(autoincrement())
+  content   String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
   createdAt DateTime @default(now())
 }
