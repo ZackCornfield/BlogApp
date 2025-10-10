@@ -65,8 +65,6 @@ export const getRecentActivities = async (req: any, res: any) => {
       select: { id: true, title: true, content: true, createdAt: true },
     });
 
-    console.log(recentPosts);
-
     res.json(recentPosts);
   } catch (error) {
     console.error(error);

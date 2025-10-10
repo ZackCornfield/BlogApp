@@ -348,26 +348,30 @@ export const unlikePost = async (req: any, res: any) => {
 
 export const addComment = async (req: any, res: any) => {
   try {
+    const { content } = req.body;
     const postId = parseInt(req.params.id);
     const userId = req.user.id;
-    const { content } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
+    if (!content || !postId) {
+      return res.status(400).json({ message: "Content and post ID are required" });
     }
 
-    const comment = await prisma.comment.create({
+    // Create the comment
+    const newComment = await prisma.comment.create({
       data: {
-        postId: postId,
-        userId: userId,
-        content: content,
+        content,
+        postId,
+        userId,
+      },
+      include: {
+        user: { select: { id: true, username: true } }, // Include user details
       },
     });
 
-    res.status(201).json(comment);
+    res.status(201).json(newComment);
   } catch (error) {
     console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
