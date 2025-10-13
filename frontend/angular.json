@@ -23,7 +23,7 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "outputPath": "dist/frontend"
+            "outputPath": "dist"
           },
           "configurations": {
             "production": {
