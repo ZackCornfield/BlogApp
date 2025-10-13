@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export interface Post {
   title: string;
@@ -38,7 +39,7 @@ export interface CommentResponse {
   providedIn: 'root',
 })
 export class PostService {
-  apiUrl = 'http://localhost:3000/api/posts';
+  apiUrl = environment.apiUrl + '/posts';
 
   constructor(private http: HttpClient) {}
 
