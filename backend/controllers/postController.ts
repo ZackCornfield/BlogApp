@@ -75,6 +75,9 @@ export const getUserPosts = async (req: any, res: any) => {
       take: limit,
       orderBy: { createdAt: "desc" },
       where: { authorId: userId },
+      include: {
+        author: { select: { id: true, username: true } }, // Include author details
+      },
     });
 
     // Get the likes and comments count
@@ -353,7 +356,9 @@ export const addComment = async (req: any, res: any) => {
     const userId = req.user.id;
 
     if (!content || !postId) {
-      return res.status(400).json({ message: "Content and post ID are required" });
+      return res
+        .status(400)
+        .json({ message: "Content and post ID are required" });
     }
 
     // Create the comment

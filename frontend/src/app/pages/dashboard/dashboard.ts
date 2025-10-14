@@ -41,8 +41,9 @@ export class Dashboard implements OnInit {
     if (form.valid) {
       this.postService.addPost(this.newPost).subscribe({
         next: (post) => {
-          this.posts.push(post);
+          this.posts.unshift(post);
           form.reset();
+          this.closeAddPostModal();
         },
         error: (err) => {
           console.error('Error adding post: ', err);
@@ -102,20 +103,5 @@ export class Dashboard implements OnInit {
 
   closeEditPostModal() {
     this.isEditPostModalOpen = false;
-  }
-
-  editPost(updatedPost: Post) {
-    this.postService.updatePost(updatedPost.id, updatedPost).subscribe({
-      next: () => {
-        const index = this.posts.findIndex((p) => p.id === updatedPost.id);
-        if (index !== -1) {
-          this.posts[index] = updatedPost;
-        }
-        this.closeEditPostModal();
-      },
-      error: (err) => {
-        console.error('Error editing post: ', err);
-      },
-    });
   }
 }

@@ -20,23 +20,20 @@ export class PostComponent {
   delete = output<number>();
   comments: Comment[] = [];
   newComment: string = '';
+  contentLimit: number = 400; // Character limit for truncation
 
   constructor(private postService: PostService, private router: Router) {}
 
   onLike() {
     const post = this.post();
-    console.log('onLike called in post.component, post:', post);
     if (post && post.id) {
-      console.log('Emitting like event with postId:', post.id);
       this.like.emit(post.id);
     }
   }
 
   onUnlike() {
     const post = this.post();
-    console.log('onUnlike called in post.component, post:', post);
     if (post && post.id) {
-      console.log('Emitting unlike event with postId:', post.id);
       this.unlike.emit(post.id);
     }
   }
@@ -60,5 +57,18 @@ export class PostComponent {
     if (postId) {
       this.router.navigate(['/post', postId]);
     }
+  }
+
+  isContentTruncated(): boolean {
+    const post = this.post();
+    return !!post?.content && post.content.length > this.contentLimit;
+  }
+
+  getTruncatedContent(): string {
+    const post = this.post();
+    if (post && post.content.length > this.contentLimit) {
+      return post.content.slice(0, this.contentLimit) + '...';
+    }
+    return post?.content || '';
   }
 }
