@@ -11,11 +11,17 @@ import { RouterLink } from '@angular/router';
   styleUrl: './nav-bar.css',
 })
 export class NavBar {
+  menuOpen = false;
+
   get authenticated() {
     return this.authService.isAuthenticated();
   }
 
   constructor(public authService: AuthService, private router: Router) {}
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
   logout() {
     this.authService.logout();

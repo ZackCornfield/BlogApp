@@ -1,54 +1,149 @@
-<nav
-  class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md"
->
-  <span class="text-xl font-semibold tracking-wide">Blog App</span>
-  <div class="flex items-center space-x-4">
-    <!-- Show login/register links if not authenticated -->
-    @if (!authenticated) {
-    <a
-      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
-      routerLink="/login"
-      routerLinkActive="active"
-      >Login</a
+<nav class="bg-gray-800 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <span class="text-gray-200 text-xl font-bold">Blog App</span>
+
+      <!-- Hamburger Menu Button (Visible on small screens) -->
+      <button
+        class="block md:hidden text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 rounded-md p-2 transition-colors"
+        (click)="toggleMenu()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+      </button>
+
+      <!-- Navigation Links (Desktop) -->
+      <div class="hidden md:flex md:items-center md:space-x-4">
+        <!-- Show login/register links if not authenticated -->
+        @if (!authenticated) {
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          routerLink="/login"
+          routerLinkActive="bg-gray-900 text-white"
+          >Login</a
+        >
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          routerLink="/register"
+          routerLinkActive="bg-gray-900 text-white"
+          >Register</a
+        >
+        } @else {
+        <!-- Show feed/dashboard/profile/logout links if authenticated -->
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+          routerLink="/global-feed"
+          routerLinkActive="bg-gray-900 text-white"
+        >
+          <img src="/feed-icon.svg" alt="Feed" class="w-5 h-5" />
+          <span>Feed</span>
+        </a>
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+          routerLink="/dashboard"
+          routerLinkActive="bg-gray-900 text-white"
+        >
+          <img src="/dashboard-icon.svg" alt="Dashboard" class="w-6 h-6" />
+          <span>Posts</span>
+        </a>
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+          routerLink="/profile"
+          routerLinkActive="bg-gray-900 text-white"
+        >
+          <img
+            src="/profile-icon.png"
+            alt="Profile"
+            class="w-6 h-6 rounded-full"
+          />
+          <span>Profile</span>
+        </a>
+        <button
+          (click)="logout()"
+          class="text-gray-200 bg-red-700 hover:bg-red-600 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+        >
+          Logout
+        </button>
+        }
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+      [ngClass]="{ hidden: !menuOpen, block: menuOpen }"
+      class="md:hidden pb-4"
     >
-    <a
-      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
-      routerLink="/register"
-      routerLinkActive="active"
-      >Register</a
-    >
-    } @else {
-    <!-- Show feed/dashboard/profile/logout links if authenticated -->
-    <a
-      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
-      routerLink="/global-feed"
-      routerLinkActive="active"
-    >
-      <img src="/feed-icon.svg" alt="Feed" class="w-5 h-5" />
-      <span>Feed</span>
-    </a>
-    <a
-      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
-      routerLink="/dashboard"
-      routerLinkActive="active"
-    >
-      <img src="/dashboard-icon.svg" alt="Dashboard" class="w-6 h-6" />
-      <span>Posts</span>
-    </a>
-    <a
-      class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition duration-300 shadow-md flex items-center space-x-2"
-      routerLink="/profile"
-      routerLinkActive="active"
-    >
-      <img src="/profile-icon.png" alt="Profile" class="w-6 h-6 rounded-full" />
-      <span>Profile</span>
-    </a>
-    <button
-      (click)="logout()"
-      class="bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-full transition duration-200"
-    >
-      Logout
-    </button>
-    }
+      <div class="flex flex-col space-y-2">
+        <!-- Show login/register links if not authenticated -->
+        @if (!authenticated) {
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-colors"
+          routerLink="/login"
+          routerLinkActive="bg-gray-900 text-white"
+          (click)="toggleMenu()"
+          >Login</a
+        >
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-colors"
+          routerLink="/register"
+          routerLinkActive="bg-gray-900 text-white"
+          (click)="toggleMenu()"
+          >Register</a
+        >
+        } @else {
+        <!-- Show feed/dashboard/profile/logout links if authenticated -->
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 transition-colors"
+          routerLink="/global-feed"
+          routerLinkActive="bg-gray-900 text-white"
+          (click)="toggleMenu()"
+        >
+          <img src="/feed-icon.svg" alt="Feed" class="w-5 h-5" />
+          <span>Feed</span>
+        </a>
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 transition-colors"
+          routerLink="/dashboard"
+          routerLinkActive="bg-gray-900 text-white"
+          (click)="toggleMenu()"
+        >
+          <img src="/dashboard-icon.svg" alt="Dashboard" class="w-6 h-6" />
+          <span>Posts</span>
+        </a>
+        <a
+          class="text-gray-200 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 transition-colors"
+          routerLink="/profile"
+          routerLinkActive="bg-gray-900 text-white"
+          (click)="toggleMenu()"
+        >
+          <img
+            src="/profile-icon.png"
+            alt="Profile"
+            class="w-6 h-6 rounded-full"
+          />
+          <span>Profile</span>
+        </a>
+        <button
+          (click)="logout()"
+          class="text-left text-gray-200 bg-red-700 hover:bg-red-600 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-colors"
+        >
+          Logout
+        </button>
+        }
+      </div>
+    </div>
   </div>
 </nav>
