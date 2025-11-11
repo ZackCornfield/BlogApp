@@ -11,9 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/auth", authRouter);
-app.use("/api/posts", postRouter);
-app.use("/api/users", userRouter);
+app.use("/auth", authRouter);
+app.use("/posts", postRouter);
+app.use("/users", userRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
