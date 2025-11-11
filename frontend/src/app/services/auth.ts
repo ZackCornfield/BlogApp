@@ -11,7 +11,7 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = 'https://blogapp-backend-i9gc.onrender.com';
+  apiUrl = environment.apiUrl;
   token: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {
